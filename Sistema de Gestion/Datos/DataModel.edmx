@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Dias">
+          <Key>
+            <PropertyRef Name="Id_dia" />
+          </Key>
+          <Property Name="Id_dia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="date" />
+        </EntityType>
+        <EntityType Name="Horas">
+          <Key>
+            <PropertyRef Name="Id_hora" />
+          </Key>
+          <Property Name="Id_hora" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_dia" Type="int" />
+          <Property Name="Hora" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="Penalizaciones">
+          <Key>
+            <PropertyRef Name="Id_penalizacion" />
+          </Key>
+          <Property Name="Id_penalizacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_usuario" Type="int" />
+          <Property Name="Fecha" Type="date" />
+          <Property Name="Motivo" Type="char" MaxLength="30" />
+          <Property Name="Duracion" Type="date" />
+        </EntityType>
+        <EntityType Name="Reservas">
+          <Key>
+            <PropertyRef Name="Id_reserva" />
+          </Key>
+          <Property Name="Id_reserva" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_usuario" Type="int" Nullable="false" />
+          <Property Name="Id_hora" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tipos Usuarios">
+          <Key>
+            <PropertyRef Name="Id_tipo" />
+          </Key>
+          <Property Name="Id_tipo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tipo" Type="int" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id_usuario" />
+          </Key>
+          <Property Name="Id_usuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="char" MaxLength="20" />
+          <Property Name="Apellido" Type="char" MaxLength="20" />
+          <Property Name="Id_tipo" Type="int" />
+          <Property Name="Contrasena" Type="char" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_Horas_Dias">
+          <End Role="Dias" Type="Self.Dias" Multiplicity="0..1" />
+          <End Role="Horas" Type="Self.Horas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dias">
+              <PropertyRef Name="Id_dia" />
+            </Principal>
+            <Dependent Role="Horas">
+              <PropertyRef Name="Id_dia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_horas">
+          <End Role="Horas" Type="Self.Horas" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horas">
+              <PropertyRef Name="Id_hora" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="Id_hora" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_usuario">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id_usuario" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="Id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Penalizacion">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Penalizaciones" Type="Self.Penalizaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id_usuario" />
+            </Principal>
+            <Dependent Role="Penalizaciones">
+              <PropertyRef Name="Id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Tipo">
+          <End Role="Tipos Usuarios" Type="Self.Tipos Usuarios" Multiplicity="0..1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipos Usuarios">
+              <PropertyRef Name="Id_tipo" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="Id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseModelStoreContainer">
+          <EntitySet Name="Dias" EntityType="Self.Dias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Horas" EntityType="Self.Horas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Penalizaciones" EntityType="Self.Penalizaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reservas" EntityType="Self.Reservas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tipos Usuarios" EntityType="Self.Tipos Usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Horas_Dias" Association="Self.FK_Horas_Dias">
+            <End Role="Dias" EntitySet="Dias" />
+            <End Role="Horas" EntitySet="Horas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_horas" Association="Self.FK_Reservas_horas">
+            <End Role="Horas" EntitySet="Horas" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_usuario" Association="Self.FK_Reservas_usuario">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Penalizacion" Association="Self.FK_Usuarios_Penalizacion">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Penalizaciones" EntitySet="Penalizaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Tipo" Association="Self.FK_Usuarios_Tipo">
+            <End Role="Tipos Usuarios" EntitySet="Tipos Usuarios" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Dias">
+          <Key>
+            <PropertyRef Name="Id_dia" />
+          </Key>
+          <Property Name="Id_dia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Horas" Relationship="Self.FK_Horas_Dias" FromRole="Dias" ToRole="Horas" />
+        </EntityType>
+        <EntityType Name="Horas">
+          <Key>
+            <PropertyRef Name="Id_hora" />
+          </Key>
+          <Property Name="Id_hora" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_dia" Type="Int32" />
+          <Property Name="Hora" Type="Time" Precision="7" />
+          <NavigationProperty Name="Dias" Relationship="Self.FK_Horas_Dias" FromRole="Horas" ToRole="Dias" />
+          <NavigationProperty Name="Reservas" Relationship="Self.FK_Reservas_horas" FromRole="Horas" ToRole="Reservas" />
+        </EntityType>
+        <EntityType Name="Penalizaciones">
+          <Key>
+            <PropertyRef Name="Id_penalizacion" />
+          </Key>
+          <Property Name="Id_penalizacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_usuario" Type="Int32" />
+          <Property Name="Fecha" Type="DateTime" Precision="0" />
+          <Property Name="Motivo" Type="String" MaxLength="30" FixedLength="true" Unicode="false" />
+          <Property Name="Duracion" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Penalizacion" FromRole="Penalizaciones" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Reservas">
+          <Key>
+            <PropertyRef Name="Id_reserva" />
+          </Key>
+          <Property Name="Id_reserva" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="Id_hora" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Horas" Relationship="Self.FK_Reservas_horas" FromRole="Reservas" ToRole="Horas" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Reservas_usuario" FromRole="Reservas" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Tipos_Usuarios">
+          <Key>
+            <PropertyRef Name="Id_tipo" />
+          </Key>
+          <Property Name="Id_tipo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tipo" Type="Int32" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Tipo" FromRole="Tipos_Usuarios" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id_usuario" />
+          </Key>
+          <Property Name="Id_usuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Apellido" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Id_tipo" Type="Int32" />
+          <Property Name="Contrasena" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Penalizaciones" Relationship="Self.FK_Usuarios_Penalizacion" FromRole="Usuarios" ToRole="Penalizaciones" />
+          <NavigationProperty Name="Reservas" Relationship="Self.FK_Reservas_usuario" FromRole="Usuarios" ToRole="Reservas" />
+          <NavigationProperty Name="Tipos_Usuarios" Relationship="Self.FK_Usuarios_Tipo" FromRole="Usuarios" ToRole="Tipos_Usuarios" />
+        </EntityType>
+        <Association Name="FK_Horas_Dias">
+          <End Role="Dias" Type="Self.Dias" Multiplicity="0..1" />
+          <End Role="Horas" Type="Self.Horas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dias">
+              <PropertyRef Name="Id_dia" />
+            </Principal>
+            <Dependent Role="Horas">
+              <PropertyRef Name="Id_dia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_horas">
+          <End Role="Horas" Type="Self.Horas" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horas">
+              <PropertyRef Name="Id_hora" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="Id_hora" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Penalizacion">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Penalizaciones" Type="Self.Penalizaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id_usuario" />
+            </Principal>
+            <Dependent Role="Penalizaciones">
+              <PropertyRef Name="Id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reservas_usuario">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Reservas" Type="Self.Reservas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id_usuario" />
+            </Principal>
+            <Dependent Role="Reservas">
+              <PropertyRef Name="Id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Tipo">
+          <End Role="Tipos_Usuarios" Type="Self.Tipos_Usuarios" Multiplicity="0..1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipos_Usuarios">
+              <PropertyRef Name="Id_tipo" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="Id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Dias" EntityType="Self.Dias" />
+          <EntitySet Name="Horas" EntityType="Self.Horas" />
+          <EntitySet Name="Penalizaciones" EntityType="Self.Penalizaciones" />
+          <EntitySet Name="Reservas" EntityType="Self.Reservas" />
+          <EntitySet Name="Tipos_Usuarios" EntityType="Self.Tipos_Usuarios" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK_Horas_Dias" Association="Self.FK_Horas_Dias">
+            <End Role="Dias" EntitySet="Dias" />
+            <End Role="Horas" EntitySet="Horas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_horas" Association="Self.FK_Reservas_horas">
+            <End Role="Horas" EntitySet="Horas" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Penalizacion" Association="Self.FK_Usuarios_Penalizacion">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Penalizaciones" EntitySet="Penalizaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reservas_usuario" Association="Self.FK_Reservas_usuario">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Reservas" EntitySet="Reservas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Tipo" Association="Self.FK_Usuarios_Tipo">
+            <End Role="Tipos_Usuarios" EntitySet="Tipos_Usuarios" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+          <EntitySetMapping Name="Dias">
+            <EntityTypeMapping TypeName="DatabaseModel.Dias">
+              <MappingFragment StoreEntitySet="Dias">
+                <ScalarProperty Name="Id_dia" ColumnName="Id_dia" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Horas">
+            <EntityTypeMapping TypeName="DatabaseModel.Horas">
+              <MappingFragment StoreEntitySet="Horas">
+                <ScalarProperty Name="Id_hora" ColumnName="Id_hora" />
+                <ScalarProperty Name="Id_dia" ColumnName="Id_dia" />
+                <ScalarProperty Name="Hora" ColumnName="Hora" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Penalizaciones">
+            <EntityTypeMapping TypeName="DatabaseModel.Penalizaciones">
+              <MappingFragment StoreEntitySet="Penalizaciones">
+                <ScalarProperty Name="Id_penalizacion" ColumnName="Id_penalizacion" />
+                <ScalarProperty Name="Id_usuario" ColumnName="Id_usuario" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservas">
+            <EntityTypeMapping TypeName="DatabaseModel.Reservas">
+              <MappingFragment StoreEntitySet="Reservas">
+                <ScalarProperty Name="Id_reserva" ColumnName="Id_reserva" />
+                <ScalarProperty Name="Id_usuario" ColumnName="Id_usuario" />
+                <ScalarProperty Name="Id_hora" ColumnName="Id_hora" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tipos_Usuarios">
+            <EntityTypeMapping TypeName="DatabaseModel.Tipos_Usuarios">
+              <MappingFragment StoreEntitySet="Tipos Usuarios">
+                <ScalarProperty Name="Id_tipo" ColumnName="Id_tipo" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="DatabaseModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="Id_usuario" ColumnName="Id_usuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+                <ScalarProperty Name="Id_tipo" ColumnName="Id_tipo" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
